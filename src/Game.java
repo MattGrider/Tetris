@@ -38,6 +38,11 @@ public class Game extends JFrame implements ActionListener, KeyListener
 	private JMenuItem quit;
 	private JMenuItem abouttxt;
 	private JMenuItem help;
+	private JButton left;
+	private JButton right;
+	private JButton softDrop;
+	private JButton hardDrop;
+	private JButton rotate;
 	private int lasize, lacount;
 	private Icon iconArray[];
 	private String names[] = 
@@ -98,10 +103,27 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		actualTime = new JLabel("0");
 		scoreHolder.setLayout(new GridLayout(5, 2));
 		
+		
+		JPanel buttonHolder = new JPanel();
+		left = new JButton("Left");
+		left.addActionListener(new leftAction());
+		right = new JButton("Right");
+		right.addActionListener(new rightAction());
+		softDrop = new JButton("Soft Drop");
+		softDrop.addActionListener(new softDropAction());
+		hardDrop = new JButton("Hard Drop");
+		hardDrop.addActionListener(new hardDropAction());
+		rotate = new JButton("Rotate");
+		rotate.addActionListener(new rotateAction());
+		buttonHolder.setLayout(new GridLayout(3,2));
+		
 		c.add(menu, BorderLayout.NORTH);
 		c.add (labelPanel, BorderLayout.CENTER );
 		addKeyListener(this);
+		setFocusable(true);
+		setFocusTraversalKeysEnabled(false);
 		c.add(scoreHolder, BorderLayout.SOUTH);
+		c.add(buttonHolder, BorderLayout.WEST);
 		
 		// create and add icons
 		   iconArray = new Icon [ names.length ];
@@ -131,6 +153,13 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		   scoreHolder.add(actualNextPiece);
 		   scoreHolder.add(timetxt);
 		   scoreHolder.add(actualTime);
+		   
+		   buttonHolder.add(softDrop);
+		   buttonHolder.add(hardDrop);
+		   buttonHolder.add(left);
+		   buttonHolder.add(right);
+		   buttonHolder.add(rotate);
+		   
 		   
 		   pack();
 		      show();
@@ -201,6 +230,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		{
 			if(temp[0][i] == true)
 			{
+				gameTime.stop();
 				return true;
 			}
 		}
@@ -483,6 +513,27 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	private boolean checkRotate()
+	{
+		activePiece.rotateRight();
+		Pair<Integer> tester[] = activePiece.getLocations();
+		for(Pair<Integer> i : tester)
+		{
+			if(i.getX() < 0 || i.getX() >= 10)
+			{
+				activePiece.rotateLeft();
+				return false;
+			}
+			if(i.getY() < 0 || i.getY() >= gameBoard.getBoard().length)
+			{
+				activePiece.rotateLeft();
+				return false;
+			}
+		}
+		activePiece.rotateLeft();
+		return true;
+	}
+	
 	public void keyPressed(KeyEvent e) {
 
 	    int key = e.getKeyCode();
@@ -519,17 +570,20 @@ public class Game extends JFrame implements ActionListener, KeyListener
 	    if (key == KeyEvent.VK_UP) 
 	    {
 	    	
-	    	for(Pair<Integer> i : activePiece.getLocations())
-			{
-				if(!checkPieceRight(i) || !checkPieceLeft(i) || !checkPiece(i))
+	    	//for(Pair<Integer> i : activePiece.getLocations())
+			//{
+				if(!checkRotate())
 				{
+					timeClock.stop();
 					return;
 				}
-			}
+			//}
+	    	
 	    	
 	    	activePiece.rotateRight();
 	    	drawBoard();
 	    	drawPiece();
+	    	timeClock.stop();
 	    }
 
 	    if (key == KeyEvent.VK_DOWN) 
@@ -545,7 +599,19 @@ public class Game extends JFrame implements ActionListener, KeyListener
 	
 	public void keyTyped(KeyEvent e) {}
 	
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+		
+		int key = e.getKeyCode();
+		
+		if (key == KeyEvent.VK_UP) 
+	    {
+	    	
+	    	timeClock.start();
+	    	
+	    	drawBoard();
+	    	drawPiece();
+	    }
+	}
 	
 	public static void main( String args[] )
 	   { 
@@ -607,4 +673,76 @@ public class Game extends JFrame implements ActionListener, KeyListener
 			actualTime.setText(("" + countSec));
 		}
 	}
+	
+	private class leftAction implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			for(Pair<Integer> i : activePiece.getLocations())
+			{
+				if(!checkPieceLeft(i))
+				{
+					return;
+				}
+			}
+	    	
+	    	activePiece.moveLeft();
+	    	drawBoard();
+			drawPiece();
+		}
+	}
+	
+	private class rightAction implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			for(Pair<Integer> i : activePiece.getLocations())
+			{
+				if(!checkPieceRight(i))
+				{
+					return;
+				}
+			}
+	    	
+	    	activePiece.moveRight();
+	    	drawBoard();
+			drawPiece();
+		}
+	}
+	
+	private class rotateAction implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+				if(!checkRotate())
+				{
+					timeClock.stop();
+			    	timeClock.start();
+					return;
+				}
+	    	
+	    	activePiece.rotateRight();
+	    	drawBoard();
+	    	drawPiece();
+	    	timeClock.stop();
+	    	timeClock.start();
+		}
+	}
+	
+	private class hardDropAction implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			hardDrop();
+		}
+	}
+	
+	private class softDropAction implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			softDrop();
+		}
+	}
+	
 }

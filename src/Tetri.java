@@ -78,8 +78,8 @@ public abstract class Tetri
 	{
 		Pair<Integer> holder[] = copyLocations();
 		
-		int Rx = holder[0].getX();
-		int Ry = holder[0].getY();
+		int Rx = holder[1].getX();
+		int Ry = holder[1].getY();
 		int Px;
 		int Py;
 		
@@ -107,8 +107,8 @@ public abstract class Tetri
 	{
 Pair<Integer> holder[] = copyLocations();
 		
-		int Rx = holder[0].getX();
-		int Ry = holder[0].getY();
+		int Rx = holder[1].getX();
+		int Ry = holder[1].getY();
 		int Px;
 		int Py;
 		
