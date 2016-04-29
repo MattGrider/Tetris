@@ -1,5 +1,7 @@
 
 /*
+ * Pair
+ * 
  * a generic holder that stores any pair of generic object types
  */
 class Pair<T>

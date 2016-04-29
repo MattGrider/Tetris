@@ -1,6 +1,10 @@
+/*
+ * TetriT
+ */
 
 public class TetriT extends Tetri
 {
+	//makes a tetris piece shaped like a T
 	public TetriT()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -26,6 +30,7 @@ public class TetriT extends Tetri
 		
 	}
 	
+	//returns tetris type as a string
 	public String getType()
 	{
 		return "T";

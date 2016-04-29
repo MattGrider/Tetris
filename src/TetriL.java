@@ -1,6 +1,10 @@
+/*
+ * TetriL
+ */
 
 public class TetriL extends Tetri 
 {
+	//makes a tetris piece shaped like an L
 	public TetriL()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -26,6 +30,7 @@ public class TetriL extends Tetri
 		
 	}
 	
+	//returns the type as a string
 	public String getType()
 	{
 		return "L";

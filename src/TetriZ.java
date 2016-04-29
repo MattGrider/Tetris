@@ -1,6 +1,11 @@
+/*
+ * TetriZ
+ */
 
 public class TetriZ extends Tetri 
 {
+	
+	//creates a tetris peice shaped like a Z
 	public TetriZ()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -26,6 +31,7 @@ public class TetriZ extends Tetri
 		
 	}
 	
+	//returns the tetris type as a string
 	public String getType()
 	{
 		return "Z";

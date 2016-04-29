@@ -1,4 +1,6 @@
 /*
+ * Tetri
+ * 
  * Class that will be used by all other tetris items
  */
 public abstract class Tetri 
@@ -6,7 +8,7 @@ public abstract class Tetri
 	//array that holds the 4 locations of the blocks
 	private  Pair<Integer> locations[];
 	
-	
+	//allows the the assignment of locations from another Pair<Integers> array
 	public void setLocations(Pair<Integer> v[])
 	{
 		locations = v;
@@ -18,6 +20,7 @@ public abstract class Tetri
 		return locations;
 	}
 	
+	//moves the piece down by adding 1 to Y
 	public void move()
 	{
 		for(int i = 0; i < locations.length; i++)
@@ -26,6 +29,7 @@ public abstract class Tetri
 		}
 	}
 	
+	//move pieces left by subtracting 1 from X
 	public void moveLeft()
 	{
 		for(int i = 0; i < locations.length; i++)
@@ -34,6 +38,7 @@ public abstract class Tetri
 		}
 	}
 	
+	//move pieces right by adding 1 to X
 	public void moveRight()
 	{
 		for(int i = 0; i < locations.length; i++)
@@ -61,6 +66,7 @@ public abstract class Tetri
 		return temp;
 	}
 	
+	//used to create a clone of the current tetri piece
 	public void copy(Tetri copyThis)
 	{
 		Pair<Integer> temp[] = copyThis.getLocations();
@@ -74,6 +80,7 @@ public abstract class Tetri
 		
 	}
 	
+	//rotates the pieces around its second section in a clockwise direction
 	public void rotateRight()
 	{
 		Pair<Integer> holder[] = copyLocations();
@@ -82,6 +89,11 @@ public abstract class Tetri
 		int Ry = holder[1].getY();
 		int Px;
 		int Py;
+		
+		if(getType().equals("O"))
+		{
+			return;
+		}
 		
 		for(int i = 0; i < holder.length; i++)
 		{
@@ -103,6 +115,8 @@ public abstract class Tetri
 		locations = holder;
 	}
 	
+	
+	//rotates the pieces around the second piece in a counter clockwise direction
 	public void rotateLeft()
 	{
 Pair<Integer> holder[] = copyLocations();
@@ -111,6 +125,11 @@ Pair<Integer> holder[] = copyLocations();
 		int Ry = holder[1].getY();
 		int Px;
 		int Py;
+		
+		if(getType().equals("O"))
+		{
+			return;
+		}
 		
 		for(int i = 0; i < holder.length; i++)
 		{
@@ -132,6 +151,7 @@ Pair<Integer> holder[] = copyLocations();
 		locations = holder;
 	}
 	
+	//returns type as a string
 	public String getType()
 	{
 		return "Tetri";

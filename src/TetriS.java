@@ -1,6 +1,10 @@
+/*
+ * TetriS
+ */
 
 public class TetriS extends Tetri 
 {
+	//makes a tetris piece shaped like an S
 	public TetriS()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -26,6 +30,7 @@ public class TetriS extends Tetri
 		
 	}
 	
+	//returns the type as a string
 	public String getType()
 	{
 		return "S";

@@ -1,6 +1,10 @@
+/*
+ * TetriJ
+ */
 
 public class TetriJ extends Tetri 
 {
+	//makes a tetris piece in the shape of a J
 	public TetriJ()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -26,6 +30,7 @@ public class TetriJ extends Tetri
 		
 	}
 	
+	//returns the type as a string
 	public String getType()
 	{
 		return "J";

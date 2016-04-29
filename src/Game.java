@@ -1,3 +1,9 @@
+/*
+ * Game
+ * 
+ * runs the game and controls what happens during movement
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridLayout;
@@ -7,47 +13,48 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 import java.util.Random;
-
 import javax.swing.*;
 
 public class Game extends JFrame implements ActionListener, KeyListener
 {
-	private Timer timeClock;
-	private Timer gameTime;
-	private Tetri activePiece;
-	private Tetri nextPiece;
-	private Board gameBoard;
-	private int level;
-	private int score;
-	private int levelsCleared;
-	private int countSec;
+	private Timer timeClock; //controls how fast pieces drop
+	private Timer gameTime; //counts active game time
+	private Tetri activePiece; //live piece
+	private Tetri nextPiece; //next piece after current one placed
+	private Board gameBoard; //the board itself
+	private int level; //current level
+	private int score; //current score
+	private int levelsCleared; //rows cleared
+	private int countSec; //seconds elapsed
 	
 	
 	//gui variables
-	private JLabel labelArray[];
-	private JLabel scoretxt, actualScore;
-	private JLabel leveltxt, actualLevel;
-	private JLabel levelclearedtxt, actualLevelCleared;
-	private JLabel nextPiecetxt, actualNextPiece;
-	private JLabel timetxt, actualTime;
-	private JMenuBar menu;
-	private JMenu file;
-	private JMenu about;
-	private JMenuItem newGame;
-	private JMenuItem quit;
-	private JMenuItem abouttxt;
-	private JMenuItem help;
-	private JButton left;
-	private JButton right;
-	private JButton softDrop;
-	private JButton hardDrop;
-	private JButton rotate;
-	private int lasize, lacount;
-	private Icon iconArray[];
+	private JLabel labelArray[]; //holds all the board pics
+	private JLabel scoretxt, actualScore; //shows score
+	private JLabel leveltxt, actualLevel; //shows level
+	private JLabel levelclearedtxt, actualLevelCleared; //shows cleared rows
+	private JLabel nextPiecetxt, actualNextPiece; //shows next piece
+	private JLabel timetxt, actualTime; // shows actual time
+	private JMenuBar menu; //holder for menu
+	private JMenu file; //bin for menu
+	private JMenu about; //bin for menu
+	private JMenuItem newGame; //new game tab
+	private JMenuItem quit; //quit tab
+	private JMenuItem abouttxt; //about game tab
+	private JMenuItem help; //help tab
+	private JButton left; //move piece left
+	private JButton right; //move piece righ
+	private JButton softDrop; //soft drop
+	private JButton hardDrop; //hard drop
+	private JButton rotate; //rotate
+	private int lasize, lacount; //holds size fo board
+	private Icon iconArray[]; //holds pics
 	private String names[] = 
-		{  "bluesquare.jpg", "blacksquare.jpg", "whitesquare.jpg" };
+		{  "bluesquare.jpg", "blacksquare.jpg", "whitesquare.jpg" }; // pic names
 	
+	//sets gui and basic game scores
 	public Game()
 	{
 		super( "Tetris" );
@@ -165,6 +172,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		      show();
 	}
 	
+	//picks random piece for the next piece after current one is dropped
 	private Tetri randomPickPiece()
 	{
 		Random rand = new Random();
@@ -206,6 +214,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return new TetriZ();
 	}
 	
+	//claculates the current delay based off level
 	private int calcDelay()
 	{
 		int delay;
@@ -222,6 +231,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return delay;
 	}
 	
+	//checks if the game is over
 	private boolean gameOver()
 	{
 		boolean temp[][] = gameBoard.getBoard();
@@ -238,6 +248,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return false;
 	}
 	
+	//moves piece to middle
 	private void centerPiece()
 	{
 		for(int i = 0; i < 4; i++)
@@ -246,8 +257,10 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//starts/restarts game
 	public void startGame()
 	{
+		//reseting of all clocks and values
 		if(timeClock.isRunning())
 		{
 			timeClock.stop();
@@ -278,13 +291,13 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		actualLevelCleared.setText(("" + levelsCleared));
 		
 			timeClock.setDelay(calcDelay());
-			//timeClock = new Timer(1000, this);
 			drawBoard();
 			drawPiece();
 			timeClock.start();
 	}
 	
 	
+	//checks if piece can move down
 	private boolean checkPiece(Pair<Integer> temp)
 	{
 		boolean checker[][] = gameBoard.getBoard();
@@ -300,6 +313,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return true;
 	}
 	
+	//moves the piece down after checking if it is clear
 	private boolean movePiece()
 	{
 		for(Pair<Integer> i : activePiece.getLocations())
@@ -315,6 +329,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return true;
 	}
 	
+	//draws the piece object to the screen
 	private void drawPiece()
 	{
 		Pair<Integer> pairDrawer[] = activePiece.getLocations();
@@ -328,6 +343,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//draws the board with already placed pieces to the screen
 	private void drawBoard()
 	{
 		boolean[][] boardDrawer = gameBoard.getBoard();
@@ -351,8 +367,10 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action performed for the delay timer
 	public void actionPerformed(ActionEvent e)
 	{
+		//if piece cant move it runs all its checks
 		if(!movePiece())
 		{
 			int multivalue[] = gameBoard.updateBoard(level, activePiece);
@@ -368,10 +386,12 @@ public class Game extends JFrame implements ActionListener, KeyListener
 			drawBoard();
 			drawPiece();
 			
+			//if row was cleared it updates score and possibly level
 			if(checkChange != 0)
 			{
 				score = checkChange;
-				level++;
+				System.out.println("new Level system");
+				level = ((levelsCleared / 10) + 1);
 				
 				actualScore.setText(("" + score));
 				actualLevel.setText(("" + level));
@@ -379,6 +399,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 				
 				System.out.println("level up");
 			}
+			//ends game if its over
 			if(this.gameOver())
 			{
 				timeClock.stop();
@@ -393,22 +414,25 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//getter for board
 	public Board getGameBoard()
 	{
 		return gameBoard;
 	}
 	
+	//getter for level
 	public int getLevel()
 	{
 		return level;
 	}
 	
+	//getter for score
 	public int getScore()
 	{
 		return score;
 	}
 	
-	
+	//checks if piece can move left
 	private boolean checkPieceLeft(Pair<Integer> temp)
 	{
 		if((temp.getX() - 1) < 0 || gameBoard.getBoard()[temp.getY()][temp.getX() - 1] == true)
@@ -418,6 +442,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return true;
 	}
 	
+	//checks if piece can move right
 	private boolean checkPieceRight(Pair<Integer> temp)
 	{
 		if((temp.getX() + 1) >= gameBoard.getBoard()[0].length || gameBoard.getBoard()[temp.getY()][temp.getX() + 1] == true)
@@ -427,10 +452,11 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return true;
 	}
 	
-	
+	//makes a hard drop which means it moves the pieces as far down as it can go immediatly
 	private void hardDrop()
 	{
 		while(movePiece());
+		//runs checks once piece can no longer move
 		if(!movePiece())
 		{
 			int multivalue[] = gameBoard.updateBoard(level, activePiece);
@@ -446,16 +472,19 @@ public class Game extends JFrame implements ActionListener, KeyListener
 			drawBoard();
 			drawPiece();
 			
+			//if row cleared updates score and possibly level
 			if(checkChange != 0)
 			{
 				score = checkChange;
-				level++;
+				System.out.println("new Level system");
+				level = ((levelsCleared / 10) + 1);
 				actualScore.setText(("" + score));
 				actualLevel.setText(("" + level));
 				actualLevelCleared.setText(("" + levelsCleared));
 				timeClock.setDelay(calcDelay());;
 				System.out.println("level up");
 			}
+			//checks if game is over
 			if(this.gameOver())
 			{
 				timeClock.stop();
@@ -471,8 +500,10 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//moves the piece down one row
 	private void softDrop()
 	{
+		//checks if peice can move
 		if(!movePiece())
 		{
 			int multivalue[] = gameBoard.updateBoard(level, activePiece);
@@ -488,16 +519,19 @@ public class Game extends JFrame implements ActionListener, KeyListener
 			drawBoard();
 			drawPiece();
 			
+			//if row cleared update score and possibly level
 			if(checkChange != 0)
 			{
 				score = checkChange;
-				level++;
+				System.out.println("new Level system");
+				level = ((levelsCleared / 10) + 1);
 				actualScore.setText(("" + score));
 				actualLevel.setText(("" + level));
 				actualLevelCleared.setText(("" + levelsCleared));
 				timeClock.setDelay(calcDelay());;
 				System.out.println("level up");
 			}
+			//checks if game is over
 			if(this.gameOver())
 			{
 				timeClock.stop();
@@ -513,6 +547,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//checks if rotating the current piece will cause it to move off the board
 	private boolean checkRotate()
 	{
 		activePiece.rotateRight();
@@ -534,10 +569,12 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		return true;
 	}
 	
+	//key pressed events
 	public void keyPressed(KeyEvent e) {
 
 	    int key = e.getKeyCode();
 
+	    //moves piece left
 	    if (key == KeyEvent.VK_LEFT) {
 	    	for(Pair<Integer> i : activePiece.getLocations())
 			{
@@ -552,6 +589,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 			drawPiece();
 	    }
 
+	    //moves piece right
 	    if (key == KeyEvent.VK_RIGHT) 
 	    {
 	    	for(Pair<Integer> i : activePiece.getLocations())
@@ -567,17 +605,21 @@ public class Game extends JFrame implements ActionListener, KeyListener
 			drawPiece();
 	    }
 
+	    //rotates piece
 	    if (key == KeyEvent.VK_UP) 
 	    {
+	    	if(Objects.equals(activePiece.getType(), new String("O")))
+	    	{
+	    		System.out.println("its on O");
+	    		timeClock.stop();
+	    		return;
+	    	}
 	    	
-	    	//for(Pair<Integer> i : activePiece.getLocations())
-			//{
 				if(!checkRotate())
 				{
 					timeClock.stop();
 					return;
 				}
-			//}
 	    	
 	    	
 	    	activePiece.rotateRight();
@@ -586,23 +628,28 @@ public class Game extends JFrame implements ActionListener, KeyListener
 	    	timeClock.stop();
 	    }
 
+	    //hard drop
 	    if (key == KeyEvent.VK_DOWN) 
 	    {
 	        hardDrop();
 	    }
 	    
+	    //soft drop
 	    if(key == KeyEvent.VK_SPACE)
 	    {
 	    	softDrop();
 	    }
 	}
 	
+	//unused key typed event
 	public void keyTyped(KeyEvent e) {}
 	
+	//key release event
 	public void keyReleased(KeyEvent e) {
 		
 		int key = e.getKeyCode();
 		
+		//unpauses delay after rotation
 		if (key == KeyEvent.VK_UP) 
 	    {
 	    	
@@ -613,6 +660,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 	    }
 	}
 	
+	//runs the program
 	public static void main( String args[] )
 	   { 
 	      Game app = new Game();
@@ -628,6 +676,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 	      
 	   }
 	
+	//action for new game, starts new game
 	private class startGameAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -637,6 +686,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for quit game, quits game
 	private class quitAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -646,6 +696,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//actions for about, shows a description of game and creators
 	private class aboutAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -655,6 +706,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for help, shows simple game help
 	private class helpAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -664,6 +716,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for game timer, times how long game has been running
 	private class gameTimeAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -674,6 +727,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for left button, moves piece left
 	private class leftAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -692,6 +746,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for right button, moves piece right
 	private class rightAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -710,6 +765,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for rotation button, rotates piece
 	private class rotateAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -729,6 +785,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for hard drop button, hard drops piece
 	private class hardDropAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -737,6 +794,7 @@ public class Game extends JFrame implements ActionListener, KeyListener
 		}
 	}
 	
+	//action for soft drop button, soft drops piece
 	private class softDropAction implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)

@@ -1,6 +1,10 @@
+/*
+ * TetriO
+ */
 
 public class TetriO extends Tetri 
 {
+	//makes a tetris piece shaped like an O
 	public TetriO()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -26,11 +30,20 @@ public class TetriO extends Tetri
 		
 	}
 	
+	//returns type as a string
 	public String getType()
 	{
 		return "O";
 	}
 	
+	//overload the rotate methods so it will not move when rotated
 	public void rotateRight()
-	{}
+	{
+		return;
+	}
+	
+	public void rotateLeft()
+	{
+		return;
+	}
 }

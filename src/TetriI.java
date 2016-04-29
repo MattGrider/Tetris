@@ -1,6 +1,11 @@
+/*
+ * TetriI
+ */
+
 
 public class TetriI extends Tetri 
 {
+	//makes a tetris peice in the shape of an I
 	public TetriI()
 	{
 		Pair<Integer> temp[] = new Pair[4];
@@ -20,6 +25,7 @@ public class TetriI extends Tetri
 		
 	}
 	
+	//returns the type as a string
 	public String getType()
 	{
 		return "I";
